@@ -1,0 +1,11 @@
+Model Information:
+* title:	Witch's table
+* source:	https://sketchfab.com/3d-models/witchs-table-b2e58c7ffa314ac2ad5d5a3737600e7f
+* author:	apetrova.hanna (https://sketchfab.com/apetrova.hanna)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Witch's table" (https://sketchfab.com/3d-models/witchs-table-b2e58c7ffa314ac2ad5d5a3737600e7f) by apetrova.hanna (https://sketchfab.com/apetrova.hanna) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
