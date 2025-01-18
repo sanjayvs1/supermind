@@ -55,7 +55,8 @@ app.post("/horoscope", async (req, res) => {
     const genAI = new GoogleGenerativeAI(process.env.GOOGLE_KEY);
 
     const prompt = `Given this horoscope data: ${JSON.stringify(horoscope)}, 
-            provide a detailed astrological reading and predictions.`;
+    give me my western and vedic sign for date of birth ${date.toDateString()} and location ${city}, ${state}.      
+    provide a detailed astrological reading and predictions.`;
 
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
     const result = await model.generateContent(prompt);
