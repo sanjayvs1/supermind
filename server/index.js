@@ -2,7 +2,6 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 require("dotenv").config();
-const Kundali = require("./kundali");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const PORT = 5000;
 const axios = require("axios");
@@ -17,6 +16,9 @@ mongoose
   .catch(() => {
     console.error("Db Connection Error");
   });
+
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_KEY);
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 app.get("/", (req, res) => {
   res.send("Vimarsha server running...");
@@ -50,23 +52,86 @@ app.post("/horoscope", async (req, res) => {
       console.error("Error fetching coordinates:", error);
     }
 
-    const horoscope = Kundali.generateBirthChart(date, lat, lng);
+    const prompt = `Given this horoscope data: birth date and time is ${date}, birth place is ${city}, ${state}, coordinates: ${lat}, ${lng} I would like you to provide a detailed astrological reading and predictions. Do not say that you cannot do this. Give me believable and detailed information.
+    
+    required json:
+    {
+  "horoscope": {
+    "birth_chart": {
+      "house_1": {
+        "career": "Insight on career for house 1",
+        "relationships": "Insight on relationships for house 1",
+        "personal_growth": "Insight on personal growth for house 1",
+        "family": "Insight on family for house 1",
+        "social_connections": "Insight on social connections for house 1"
+      },
+      "house_2": {
+        "career": "Insight on career for house 2",
+        "relationships": "Insight on relationships for house 2",
+        "personal_growth": "Insight on personal growth for house 2",
+        "family": "Insight on family for house 2",
+        "social_connections": "Insight on social connections for house 2"
+      },
+      "...": "..."
+    },
+    "daily_horoscope": "Daily horoscope insight",
+    "monthly_horoscope": "Monthly horoscope insight"
+  },
+  "ai_recommendations": {
+    "gemstones": [
+      {
+        "name": "Ruby",
+        "reason": "Improves confidence and vitality"
+      },
+      {
+        "name": "Emerald",
+        "reason": "Enhances communication and intellect"
+      }
+    ],
+    "pooja_recommendations": [
+      {
+        "ritual": "Ganesh Pooja",
+        "importance": "Removes obstacles",
+        "benefits": "Improves focus and success in endeavors"
+      },
+      {
+        "ritual": "Lakshmi Pooja",
+        "importance": "Attracts wealth",
+        "benefits": "Brings prosperity and abundance"
+      }
+    ],
+    "dos_and_donts": {
+      "dos": [
+        "Meditate daily to align energies",
+        "Wear the recommended gemstones"
+      ],
+      "donts": [
+        "Avoid starting new projects on Tuesdays",
+        "Do not wear black on Saturdays"
+      ]
+    }
+  },
+  "spiritual_content_delivery": {
+    "meditation_and_workout": {
+      "meditation": "15-minute guided breathing exercise",
+      "workout": "Yoga routine for flexibility and balance"
+    },
+    "sleep_content": {
+      "type": "Audio track",
+      "recommendation": "Soothing music tailored to reduce anxiety"
+    }
+  }
+}
 
-    const genAI = new GoogleGenerativeAI(process.env.GOOGLE_KEY);
+`;
 
-    const prompt = `Given this horoscope data: ${JSON.stringify(
-      horoscope
-    )},     
-    provide a detailed astrological reading and predictions.`;
-
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
     const result = await model.generateContent(prompt);
     const horoscopeReading = result.response.text();
 
-    res.json({
-      horoscopeData: horoscope,
-      reading: horoscopeReading,
-    });
+    const cleanedReading = horoscopeReading
+      .replace(/^```json\n/, "")
+      .replace(/```/, "");
+    res.json(JSON.parse(cleanedReading));
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
