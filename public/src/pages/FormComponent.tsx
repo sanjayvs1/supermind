@@ -4,7 +4,6 @@ import { Calendar as CalendarIcon, Clock, Loader2, Stars } from "lucide-react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import {
   Card,
   CardContent,
@@ -19,6 +18,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { Vortex } from "@/components/ui/vortex";
+import ProcessingPopup from "./Kundli";
 
 // Zod schema for form validation
 const formSchema = z.object({
@@ -74,6 +74,7 @@ const FormComponent = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative">
+      <ProcessingPopup isOpen={true} />
       <Vortex backgroundColor="black" className="flex bg-black/30 items-center justify-center px-2 md:px-10 py-4 w-full h-full">
         <div className="w-full max-w-6xl flex flex-col md:flex-row gap-8 items-center">
           {/* Left side content */}
