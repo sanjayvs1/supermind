@@ -2,7 +2,6 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 require("dotenv").config();
-const Kundali = require("./kundali");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const PORT = 5000;
 const axios = require("axios");
@@ -50,21 +49,16 @@ app.post("/horoscope", async (req, res) => {
       console.error("Error fetching coordinates:", error);
     }
 
-    const horoscope = Kundali.generateBirthChart(date, lat, lng);
 
     const genAI = new GoogleGenerativeAI(process.env.GOOGLE_KEY);
 
-    const prompt = `Given this horoscope data: ${JSON.stringify(
-      horoscope
-    )},     
-    provide a detailed astrological reading and predictions.`;
+    const prompt = `Given this horoscope data: birth date is ${date}, birth place is ${city}, ${state}, I would like you to provide a detailed astrological reading and predictions.`;
 
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
     const result = await model.generateContent(prompt);
     const horoscopeReading = result.response.text();
 
     res.json({
-      horoscopeData: horoscope,
       reading: horoscopeReading,
     });
   } catch (error) {
