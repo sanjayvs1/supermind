@@ -1,7 +1,10 @@
 import React from "react";
 import { format } from "date-fns";
-import { Calendar as CalendarIcon, Clock } from "lucide-react";
+import { Calendar as CalendarIcon, Clock, Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 
 import {
   Card,
@@ -36,8 +39,33 @@ import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { Vortex } from "@/components/ui/vortex";
 
+// Zod schema for form validation
+const formSchema = z.object({
+  name: z
+    .string()
+    .min(2, { message: "Name must be at least 2 characters" })
+    .max(50, { message: "Name must be less than 50 characters" }),
+  dob: z.date({
+    required_error: "Date of birth is required",
+    invalid_type_error: "That's not a valid date",
+  }),
+  time: z.string().min(1, { message: "Birth time is required" }),
+  gender: z.string().min(1, { message: "Please select a gender" }),
+  state: z
+    .string()
+    .min(2, { message: "State must be at least 2 characters" })
+    .max(50, { message: "State must be less than 50 characters" }),
+  city: z
+    .string()
+    .min(2, { message: "City must be at least 2 characters" })
+    .max(50, { message: "City must be less than 50 characters" }),
+});
+
 const FormComponent = () => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const form = useForm({
+    resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       dob: undefined,
@@ -48,15 +76,24 @@ const FormComponent = () => {
     },
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    try {
+      setIsLoading(true);
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      console.log(data);
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <div className="absolute flex min-h-screen items-center justify-center p-4">
       <Vortex
         backgroundColor="black"
-        className="flex bg-black/30 items-center flex-col justify-center px-2 md:px-10 py-4 w-full h-full"
+        className="flex items-center flex-col justify-center px-2 md:px-10 py-4 w-full h-full"
       >
         <Card className="w-full max-w-lg bg-black/30 backdrop-blur-md border-purple-500/30">
           <CardHeader className="space-y-1">
@@ -84,9 +121,10 @@ const FormComponent = () => {
                           placeholder="Enter your name"
                           {...field}
                           className="bg-white/10 border-purple-500/30 text-purple-100 placeholder:text-purple-200/50"
+                          disabled={isLoading}
                         />
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage className="text-red-300" />
                     </FormItem>
                   )}
                 />
@@ -109,6 +147,7 @@ const FormComponent = () => {
                                   "pl-3 text-left font-normal bg-white/10 border-purple-500/30 text-purple-100",
                                   !field.value && "text-purple-200/50"
                                 )}
+                                disabled={isLoading}
                               >
                                 {field.value ? (
                                   format(field.value, "PPP")
@@ -132,7 +171,7 @@ const FormComponent = () => {
                             />
                           </PopoverContent>
                         </Popover>
-                        <FormMessage />
+                        <FormMessage className="text-red-300" />
                       </FormItem>
                     )}
                   />
@@ -151,11 +190,12 @@ const FormComponent = () => {
                               type="time"
                               {...field}
                               className="bg-white/10 border-purple-500/30 text-purple-100"
+                              disabled={isLoading}
                             />
                             <Clock className="absolute right-3 top-2.5 h-4 w-4 text-purple-200/50" />
                           </div>
                         </FormControl>
-                        <FormMessage />
+                        <FormMessage className="text-red-300" />
                       </FormItem>
                     )}
                   />
@@ -170,6 +210,7 @@ const FormComponent = () => {
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}
+                        disabled={isLoading}
                       >
                         <FormControl>
                           <SelectTrigger className="bg-white/10 border-purple-500/30 text-purple-100">
@@ -185,7 +226,7 @@ const FormComponent = () => {
                           <SelectItem value="other">Other</SelectItem>
                         </SelectContent>
                       </Select>
-                      <FormMessage />
+                      <FormMessage className="text-red-300" />
                     </FormItem>
                   )}
                 />
@@ -202,9 +243,10 @@ const FormComponent = () => {
                             placeholder="Enter your state"
                             {...field}
                             className="bg-white/10 border-purple-500/30 text-purple-100 placeholder:text-purple-200/50"
+                            disabled={isLoading}
                           />
                         </FormControl>
-                        <FormMessage />
+                        <FormMessage className="text-red-300" />
                       </FormItem>
                     )}
                   />
@@ -220,9 +262,10 @@ const FormComponent = () => {
                             placeholder="Enter your city"
                             {...field}
                             className="bg-white/10 border-purple-500/30 text-purple-100 placeholder:text-purple-200/50"
+                            disabled={isLoading}
                           />
                         </FormControl>
-                        <FormMessage />
+                        <FormMessage className="text-red-300" />
                       </FormItem>
                     )}
                   />
@@ -231,8 +274,16 @@ const FormComponent = () => {
                 <Button
                   type="submit"
                   className="w-full bg-purple-500 hover:bg-purple-600 text-white"
+                  disabled={isLoading}
                 >
-                  Reveal My Destiny
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Processing
+                    </>
+                  ) : (
+                    "Reveal My Destiny"
+                  )}
                 </Button>
               </form>
             </Form>
