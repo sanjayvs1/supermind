@@ -33,7 +33,7 @@ app.post("/horoscope", async (req, res) => {
     const { birthDate, city, state } = req.body;
     const date = new Date(birthDate);
 
-    const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${city},${state}&key=${process.env.GOOGLE_KEY}`; 
+    const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${city},${state}&key=${process.env.GOOGLE_KEY}`;
 
     try {
       const response = await axios.get(geocodeUrl);
@@ -54,8 +54,9 @@ app.post("/horoscope", async (req, res) => {
 
     const genAI = new GoogleGenerativeAI(process.env.GOOGLE_KEY);
 
-    const prompt = `Given this horoscope data: ${JSON.stringify(horoscope)}, 
-    give me my western and vedic sign for date of birth ${date.toDateString()} and location ${city}, ${state}.      
+    const prompt = `Given this horoscope data: ${JSON.stringify(
+      horoscope
+    )},     
     provide a detailed astrological reading and predictions.`;
 
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
