@@ -5,6 +5,7 @@ require("dotenv").config();
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const PORT = 5000;
 const axios = require("axios");
+const cors = require('cors')
 
 mongoose
   .connect(
@@ -25,6 +26,7 @@ app.get("/", (req, res) => {
 });
 
 app.use(express.json());
+app.use(cors())
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
@@ -52,7 +54,7 @@ app.post("/horoscope", async (req, res) => {
       console.error("Error fetching coordinates:", error);
     }
 
-    const prompt = `Given this horoscope data: birth date and time is ${date}, birth place is ${city}, ${state}, coordinates: ${lat}, ${lng} I would like you to provide a detailed astrological reading and predictions. Do not say that you cannot do this. Give me believable and detailed information.
+    const prompt = `This is a Hindu astrology service. Given this horoscope data: birth date and time is ${date}, birth place is ${city}, ${state}, coordinates: ${lat}, ${lng} I would like you to provide a detailed vedic astrological reading and predictions. Do not say that you cannot do this. Give me believable and detailed information.
     
     required json:
     {
@@ -132,6 +134,36 @@ app.post("/horoscope", async (req, res) => {
       .replace(/^```json\n/, "")
       .replace(/```/, "");
     res.json(JSON.parse(cleanedReading));
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+app.post("/chat", async (req, res) => {
+  try {
+    const { birthDate, city, state, prompt } = req.body;
+    const date = new Date(birthDate);
+
+    const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${city},${state}&key=${process.env.GOOGLE_KEY}`;
+
+    let lat, lng;
+    try {
+      const response = await axios.get(geocodeUrl);
+      if (response.data.status === "OK") {
+        const location = response.data.results[0].geometry.location;
+        lat = location.lat;
+        lng = location.lng;
+      }
+    } catch (error) {
+      console.error("Error fetching coordinates:", error);
+    }
+
+    const aiPrompt = `Always generate horoscopic response based on this birth data: date ${date}, location ${city}, ${state} (${lat}, ${lng}), answer the following question in a brief, conversational way: ${prompt}`;
+
+    const result = await model.generateContent(aiPrompt);
+    const chatResponse = result.response.text();
+
+    res.json({ response: chatResponse });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

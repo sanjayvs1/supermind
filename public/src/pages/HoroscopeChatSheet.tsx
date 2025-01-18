@@ -9,6 +9,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { apiUrl } from "@/utils";
 
 const messages = [
   {
@@ -66,16 +67,41 @@ export function HoroscopeChatSheet() {
     setInputMessage("");
     setIsLoading(true);
 
-    // Simulate AI response
-    setTimeout(() => {
+    // Send message to API
+    try {
+      const response = await fetch(`${apiUrl}/chat`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          birthDate: "2004-04-28T10:53:00Z",
+          city: "Chennai",
+          state: "Tamil Nadu",
+          prompt: inputMessage
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
       const aiResponse = {
         type: "ai",
-        content:
-          "The celestial energies are aligning with your inquiry. I sense great potential in your cosmic path...",
+        content: data.response,
       };
       setChatMessages((prev) => [...prev, aiResponse]);
+    } catch (error) {
+      console.error('Error:', error);
+      const errorResponse = {
+        type: "ai",
+        content: "I apologize, but I'm unable to connect with the celestial energies at the moment.",
+      };
+      setChatMessages((prev) => [...prev, errorResponse]);
+    } finally {
       setIsLoading(false);
-    }, 2000);
+    }
   };
 
   return (
