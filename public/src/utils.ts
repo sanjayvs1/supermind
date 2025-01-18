@@ -1,0 +1,1 @@
+export const apiUrl = process.env.VITE_API || 'http://localhost:5000';

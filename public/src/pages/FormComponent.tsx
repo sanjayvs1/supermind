@@ -18,7 +18,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { Vortex } from "@/components/ui/vortex";
-import ProcessingPopup from "./Kundli";
 
 // Zod schema for form validation
 const formSchema = z.object({
@@ -150,6 +149,7 @@ const FormComponent = () => {
                       </FormItem>
                     )}
                   />
+                  <HoroscopeChatSheet></HoroscopeChatSheet>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
