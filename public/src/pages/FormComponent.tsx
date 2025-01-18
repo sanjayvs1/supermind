@@ -10,6 +10,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -38,6 +39,7 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { Vortex } from "@/components/ui/vortex";
+import HoroscopeChatSheet from "./HoroscopeChatSheet";
 
 // Zod schema for form validation
 const formSchema = z.object({

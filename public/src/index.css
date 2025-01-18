@@ -6,7 +6,6 @@
 
 @layer base {
   :root {
-
     --background: 0 0% 100%;
 
     --foreground: 240 10% 3.9%;
@@ -55,10 +54,9 @@
 
     --chart-5: 27 87% 67%;
 
-    --radius: 0.5rem
+    --radius: 0.5rem;
   }
   .dark {
-
     --background: 240 10% 3.9%;
 
     --foreground: 0 0% 98%;
@@ -105,8 +103,38 @@
 
     --chart-4: 280 65% 60%;
 
-    --chart-5: 340 75% 55%
+    --chart-5: 340 75% 55%;
   }
+}
+
+@keyframes slide-right {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-left {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-right {
+  animation: slide-right 0.3s ease-out;
+}
+
+.animate-slide-left {
+  animation: slide-left 0.3s ease-out;
 }
 
 @layer base {
