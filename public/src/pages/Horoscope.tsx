@@ -131,13 +131,7 @@ function Horoscope() {
           <CameraAnimation />
         </Suspense>
 
-        <OrbitControls
-          enableDamping
-          dampingFactor={0.05}
-          rotateSpeed={0.5}
-          minDistance={5}
-          maxDistance={20}
-        />
+        <OrbitControls enableDamping dampingFactor={0.05} rotateSpeed={0.5} />
       </Canvas>
 
       {/* Form overlay with fade-in animation */}
