@@ -8,8 +8,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -21,7 +19,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { Vortex } from "@/components/ui/vortex";
-import HoroscopeChatSheet from "./HoroscopeChatSheet";
 
 // Zod schema for form validation
 const formSchema = z.object({
@@ -45,67 +42,10 @@ const formSchema = z.object({
     .max(50, { message: "City must be less than 50 characters" }),
 });
 
-const dummyKundliData = {
-  name: "John Doe",
-  ascendant: "Leo",
-  moonSign: "Taurus",
-  sunSign: "Gemini",
-  predictions: {
-    career: "Strong period for career growth. Leadership opportunities ahead.",
-    relationships: "Focus on building deeper connections. Favorable time for partnerships.",
-    health: "Pay attention to mental wellness. Practice meditation.",
-    finance: "Investment opportunities arise. Exercise caution in spending."
-  }
-};
-
-const KundliDisplay = ({ data = dummyKundliData }) => {
-  return (
-    <div className="space-y-6 animate-fade-in">
-      <div className="space-y-2">
-        <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-purple-200">
-          Your Cosmic Blueprint
-        </h1>
-        <p className="text-xl text-purple-300">
-          Welcome, {data.name}
-        </p>
-      </div>
-
-      <div className="space-y-4">
-        <div className="flex items-start space-x-3 opacity-0 animate-fade-slide-up" style={{ animationDelay: "200ms", animationFillMode: "forwards" }}>
-          <Stars className="w-6 h-6 mt-1 text-purple-400" />
-          <div>
-            <h3 className="text-lg font-semibold">Celestial Positions</h3>
-            <p className="text-purple-300/80">
-              Ascendant: {data.ascendant} | Moon Sign: {data.moonSign} | Sun Sign: {data.sunSign}
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-start space-x-3 opacity-0 animate-fade-slide-up" style={{ animationDelay: "400ms", animationFillMode: "forwards" }}>
-          <Stars className="w-6 h-6 mt-1 text-purple-400" />
-          <div>
-            <h3 className="text-lg font-semibold">Career & Finance</h3>
-            <p className="text-purple-300/80">{data.predictions.career}</p>
-            <p className="text-purple-300/80 mt-2">{data.predictions.finance}</p>
-          </div>
-        </div>
-
-        <div className="flex items-start space-x-3 opacity-0 animate-fade-slide-up" style={{ animationDelay: "600ms", animationFillMode: "forwards" }}>
-          <Stars className="w-6 h-6 mt-1 text-purple-400" />
-          <div>
-            <h3 className="text-lg font-semibold">Relationships & Health</h3>
-            <p className="text-purple-300/80">{data.predictions.relationships}</p>
-            <p className="text-purple-300/80 mt-2">{data.predictions.health}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 const FormComponent = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [kundli, setKundli] = useState(null);
+  const [kundli, setKundli] = useState()
+
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -124,7 +64,7 @@ const FormComponent = () => {
       setIsLoading(true);
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 2000));
-      setKundli(dummyKundliData);
+      console.log(data);
     } catch (error) {
       console.error("Error submitting form:", error);
     } finally {
@@ -137,19 +77,48 @@ const FormComponent = () => {
       <Vortex backgroundColor="black" className="flex bg-black/30 items-center justify-center px-2 md:px-10 py-4 w-full h-full">
         <div className="w-full max-w-6xl flex flex-col md:flex-row gap-8 items-center">
           {/* Left side content */}
-          <div className="w-full md:w-1/2 text-purple-200 min-h-[200px] flex items-center">
-            {kundli ? (
-              <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-purple-200">
-                Hi
-              </h1>
-            ) : (
-              <div className="space-y-2">
-                <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-purple-200">
-                  Welcome to AstroTalk
-                </h1>
-                <p className="text-xl text-purple-300">Your Gateway to Cosmic Wisdom</p>
-              </div>
-            )}
+          <div className="w-full md:w-1/2 text-purple-200 space-y-6">
+            {
+              !kundli ? (
+                <>
+                  <div className="space-y-2">
+                    <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-purple-200">
+                      Welcome to Soultalk
+                    </h1>
+                    <p className="text-xl text-purple-300">Your Gateway to Cosmic Wisdom</p>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="flex items-start space-x-3">
+                      <Stars className="w-6 h-6 mt-1 text-purple-400" />
+                      <div>
+                        <h3 className="text-lg font-semibold">Personalized Kundli Analysis</h3>
+                        <p className="text-purple-300/80">Discover your life path through detailed birth chart analysis and planetary positions.</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start space-x-3">
+                      <Stars className="w-6 h-6 mt-1 text-purple-400" />
+                      <div>
+                        <h3 className="text-lg font-semibold">Expert Solutions</h3>
+                        <p className="text-purple-300/80">Get personalized gemstone recommendations and spiritual guidance for life's challenges.</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start space-x-3">
+                      <Stars className="w-6 h-6 mt-1 text-purple-400" />
+                      <div>
+                        <h3 className="text-lg font-semibold">AI-Powered Insights</h3>
+                        <p className="text-purple-300/80">Experience our advanced chatbot for instant spiritual advice and cosmic insights.</p>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <h1>Kundli</h1>
+              )
+            }
+
           </div>
 
           {/* Right side form */}
