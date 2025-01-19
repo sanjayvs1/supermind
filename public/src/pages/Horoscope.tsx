@@ -65,7 +65,7 @@ function Model() {
 }
 
 function Horoscope() {
-  const [showForm, setShowForm] = useState(true);
+  const [showForm, setShowForm] = useState(false);
 
   function CameraAnimation() {
     const { camera, scene } = useThree();
