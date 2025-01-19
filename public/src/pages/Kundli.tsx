@@ -63,6 +63,7 @@ const HoroscopeDashboard = () => {
                     })
                 })
                 const data = await response.json()
+                console.log(data)
                 setHoroscope(data)
                 setIsLoading(false)
             } catch (error) {

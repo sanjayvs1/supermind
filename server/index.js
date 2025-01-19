@@ -37,24 +37,24 @@ app.post("/horoscope", async (req, res) => {
     const { birthDate, city, state } = req.body;
     const date = new Date(birthDate);
 
-    const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${city},${state}&key=${process.env.GOOGLE_KEY}`;
+    // const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${city},${state}&key=${process.env.GOOGLE_KEY}`;
 
-    try {
-      const response = await axios.get(geocodeUrl);
+    // try {
+    //   const response = await axios.get(geocodeUrl);
 
-      if (response.data.status === "OK") {
-        const result = response.data.results[0];
-        const location = result.geometry.location;
-        lat = location.lat;
-        lng = location.lng;
-      } else {
-        console.log("No results found.");
-      }
-    } catch (error) {
-      console.error("Error fetching coordinates:", error);
-    }
+    //   if (response.data.status === "OK") {
+    //     const result = response.data.results[0];
+    //     const location = result.geometry.location;
+    //     lat = location.lat;
+    //     lng = location.lng;
+    //   } else {
+    //     console.log("No results found.");
+    //   }
+    // } catch (error) {
+    //   console.error("Error fetching coordinates:", error);
+    // }
 
-    const prompt = `This is a Hindu astrology service. Given this horoscope data: birth date and time is ${date}, birth place is ${city}, ${state}, coordinates: ${lat}, ${lng} I would like you to provide a detailed vedic astrological reading and predictions. Do not say that you cannot do this. Give me believable and detailed information.
+    const prompt = `This is a Hindu astrology service. Given this horoscope data: birth date and time is ${date}, birth place is ${city}, ${state} I would like you to provide a detailed vedic astrological reading and predictions. Do not say that you cannot do this. Give me believable and detailed information.
     
     required json:
   {
@@ -130,21 +130,21 @@ app.post("/chat", async (req, res) => {
     const { birthDate, city, state, prompt } = req.body;
     const date = new Date(birthDate);
 
-    const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${city},${state}&key=${process.env.GOOGLE_KEY}`;
+    // const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${city},${state}&key=${process.env.GOOGLE_KEY}`;
 
-    let lat, lng;
-    try {
-      const response = await axios.get(geocodeUrl);
-      if (response.data.status === "OK") {
-        const location = response.data.results[0].geometry.location;
-        lat = location.lat;
-        lng = location.lng;
-      }
-    } catch (error) {
-      console.error("Error fetching coordinates:", error);
-    }
+    // let lat, lng;
+    // try {
+    //   const response = await axios.get(geocodeUrl);
+    //   if (response.data.status === "OK") {
+    //     const location = response.data.results[0].geometry.location;
+    //     lat = location.lat;
+    //     lng = location.lng;
+    //   }
+    // } catch (error) {
+    //   console.error("Error fetching coordinates:", error);
+    // }
 
-    const aiPrompt = `You are an Expert Astrologer! Always generate horoscopic response based on this birth data: date ${date}, location ${city}, ${state} (${lat}, ${lng}), answer the following question in a brief, conversational way: ${prompt}`;
+    const aiPrompt = `You are an Expert Astrologer! Always generate horoscopic response based on this birth data: date ${date}, location ${city}, ${state}, answer the following question in a brief, conversational way: ${prompt}`;
 
     const result = await model.generateContent(aiPrompt);
     const chatResponse = result.response.text();

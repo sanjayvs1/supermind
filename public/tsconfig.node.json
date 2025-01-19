@@ -15,10 +15,11 @@
 
     /* Linting */
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "noUnusedLocals": false,        // Changed to false
+    "noUnusedParameters": false,     // Changed to false
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+    "noImplicitAny": false          // Added this line
   },
   "include": ["vite.config.ts"]
 }

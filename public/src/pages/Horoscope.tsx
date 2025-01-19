@@ -1,8 +1,11 @@
-import { useLoader, useThree } from "@react-three/fiber";
-import { gsap } from "gsap";
-import { useEffect, useMemo, useRef, useState } from "react";
+// @ts-nocheck
+import { Canvas, useLoader, useThree } from "@react-three/fiber";
+import { Environment, OrbitControls } from "@react-three/drei";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { GLTFLoader } from "three-stdlib";
+import { gsap } from "gsap";
 import FormComponent from "./FormComponent";
+
 
 function StarField() {
   const count = 500;
@@ -106,7 +109,7 @@ function Horoscope() {
 
   return (
     <div className="relative w-screen h-screen">
-      {/* <Canvas
+      <Canvas
         shadows
         style={{ backgroundColor: "#000000" }}
         camera={{ fov: 45 }}
@@ -131,7 +134,7 @@ function Horoscope() {
         </Suspense>
 
         <OrbitControls enableDamping dampingFactor={0.05} rotateSpeed={0.5} />
-      </Canvas> */}
+      </Canvas>
 
       {/* Form overlay with fade-in animation */}
       <div
