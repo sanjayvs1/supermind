@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { format } from "date-fns";
-import { Calendar as CalendarIcon, Clock, Loader2, Stars } from "lucide-react";
+import { Loader2, Stars } from "lucide-react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,22 +13,15 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
-import { cn } from "@/lib/utils";
 import { Vortex } from "@/components/ui/vortex";
-import HoroscopeChatSheet from "./HoroscopeChatSheet";
-import ProcessingPopup from "./Kundli";
 import { Link, useNavigate } from "react-router-dom";
 
-// Zod schema for form validation
 const formSchema = z.object({
   name: z
     .string()
     .min(2, { message: "Name must be at least 2 characters" })
     .max(50, { message: "Name must be less than 50 characters" }),
   dob: z.string().min(1, { message: "Date of birth is required" }),
-  time: z.string().min(1, { message: "Birth time is required" }),
   gender: z.string().min(1, { message: "Please select a gender" }),
   state: z
     .string()
@@ -43,35 +35,30 @@ const formSchema = z.object({
 
 const FormComponent = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [kundli, setKundli] = useState()
-
+  const navigate = useNavigate();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      dob: undefined,
-      time: "",
+      dob: "",
       gender: "",
       state: "",
       city: "",
     },
   });
 
-  const onSubmit = async (data: any) => {
-    const navigate = useNavigate();
+  const onSubmit = async (data) => {
     try {
       setIsLoading(true);
-      console.log("hello")
       const { dob, city, state } = data;
-      navigate(`/dashboard`, {
+      navigate('/dashboard', {
         state: {
           birthDate: dob,
-          city: city,
-          state: state
+          city,
+          state
         },
       });
-      console.log(data);
     } catch (error) {
       console.error("Error submitting form:", error);
     } finally {
@@ -85,47 +72,37 @@ const FormComponent = () => {
         <div className="w-full max-w-6xl flex flex-col md:flex-row gap-8 items-center">
           {/* Left side content */}
           <div className="w-full md:w-1/2 text-purple-200 space-y-6">
-            {
-              !kundli ? (
-                <>
-                  <div className="space-y-2">
-                    <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-purple-200">
-                      Welcome to Soultalk
-                    </h1>
-                    <p className="text-xl text-purple-300">Your Gateway to Cosmic Wisdom</p>
+            <div className="space-y-2">
+              <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-purple-200">
+                Welcome to Soultalk
+              </h1>
+              <p className="text-xl text-purple-300">Your Gateway to Cosmic Wisdom</p>
+            </div>
+
+            <div className="space-y-4">
+              {[
+                {
+                  title: "Personalized Kundli Analysis",
+                  description: "Discover your life path through detailed birth chart analysis and planetary positions."
+                },
+                {
+                  title: "Expert Solutions",
+                  description: "Get personalized gemstone recommendations and spiritual guidance for life's challenges."
+                },
+                {
+                  title: "AI-Powered Insights",
+                  description: "Experience our advanced chatbot for instant spiritual advice and cosmic insights."
+                }
+              ].map((feature, index) => (
+                <div key={index} className="flex items-start space-x-3">
+                  <Stars className="w-6 h-6 mt-1 text-purple-400" />
+                  <div>
+                    <h3 className="text-lg font-semibold">{feature.title}</h3>
+                    <p className="text-purple-300/80">{feature.description}</p>
                   </div>
-
-                  <div className="space-y-4">
-                    <div className="flex items-start space-x-3">
-                      <Stars className="w-6 h-6 mt-1 text-purple-400" />
-                      <div>
-                        <h3 className="text-lg font-semibold">Personalized Kundli Analysis</h3>
-                        <p className="text-purple-300/80">Discover your life path through detailed birth chart analysis and planetary positions.</p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start space-x-3">
-                      <Stars className="w-6 h-6 mt-1 text-purple-400" />
-                      <div>
-                        <h3 className="text-lg font-semibold">Expert Solutions</h3>
-                        <p className="text-purple-300/80">Get personalized gemstone recommendations and spiritual guidance for life's challenges.</p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start space-x-3">
-                      <Stars className="w-6 h-6 mt-1 text-purple-400" />
-                      <div>
-                        <h3 className="text-lg font-semibold">AI-Powered Insights</h3>
-                        <p className="text-purple-300/80">Experience our advanced chatbot for instant spiritual advice and cosmic insights.</p>
-                      </div>
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <h1>Kundli</h1>
-              )
-            }
-
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* Right side form */}
@@ -146,8 +123,8 @@ const FormComponent = () => {
                         <FormLabel className="text-purple-200">Name</FormLabel>
                         <FormControl>
                           <Input
-                            placeholder="Enter your name"
                             {...field}
+                            placeholder="Enter your name"
                             className="bg-white/10 border-purple-500/30 text-purple-100 placeholder:text-purple-200/50"
                             disabled={isLoading}
                           />
@@ -156,33 +133,25 @@ const FormComponent = () => {
                       </FormItem>
                     )}
                   />
-                  <Link
-                    to="/chat"
-                    className="inline-flex items-center px-4 py-2 bg-purple-900/50 border border-purple-500/50 text-purple-100 hover:bg-purple-800/50 rounded-md"
-                  >
-                    <Stars className="w-4 h-4 mr-2" />
-                    Consult the Oracle
-                  </Link>
+
                   <FormField
                     control={form.control}
                     name="dob"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-purple-200">Date and Time of Birth</FormLabel>
+                        <FormLabel className="text-purple-200">Date of Birth</FormLabel>
                         <FormControl>
                           <Input
-
-                            placeholder="Enter your Date and time of Birth"
                             {...field}
-                            className="bg-white/10 border-purple-500/30 text-purple-100 placeholder:text-purple-200/50"
-                            disabled={isLoading}>
-                          </Input>
+                            type="date"
+                            className="bg-white/10 border-purple-500/30 text-purple-100"
+                            disabled={isLoading}
+                          />
                         </FormControl>
                         <FormMessage className="text-red-300" />
                       </FormItem>
                     )}
                   />
-
 
                   <FormField
                     control={form.control}
@@ -197,10 +166,7 @@ const FormComponent = () => {
                         >
                           <FormControl>
                             <SelectTrigger className="bg-white/10 border-purple-500/30 text-purple-100">
-                              <SelectValue
-                                placeholder="Select your gender"
-                                className="text-purple-200/50"
-                              />
+                              <SelectValue placeholder="Select your gender" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
@@ -223,8 +189,8 @@ const FormComponent = () => {
                           <FormLabel className="text-purple-200">State</FormLabel>
                           <FormControl>
                             <Input
-                              placeholder="Enter your state"
                               {...field}
+                              placeholder="Enter your state"
                               className="bg-white/10 border-purple-500/30 text-purple-100 placeholder:text-purple-200/50"
                               disabled={isLoading}
                             />
@@ -242,8 +208,8 @@ const FormComponent = () => {
                           <FormLabel className="text-purple-200">City</FormLabel>
                           <FormControl>
                             <Input
-                              placeholder="Enter your city"
                               {...field}
+                              placeholder="Enter your city"
                               className="bg-white/10 border-purple-500/30 text-purple-100 placeholder:text-purple-200/50"
                               disabled={isLoading}
                             />
@@ -253,6 +219,14 @@ const FormComponent = () => {
                       )}
                     />
                   </div>
+
+                  <Link
+                    to="/chat"
+                    className="inline-flex items-center px-4 py-2 bg-purple-900/50 border border-purple-500/50 text-purple-100 hover:bg-purple-800/50 rounded-md"
+                  >
+                    <Stars className="w-4 h-4 mr-2" />
+                    Consult the Oracle
+                  </Link>
 
                   <Button
                     type="submit"
