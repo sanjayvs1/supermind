@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { apiUrl } from '@/utils'
 import { Brain, Building2, Check, Dumbbell, Gem, Heart, Home, NotebookIcon as Lotus, Moon, Music, Scroll, Sparkles, Stars, Sun, Users, X } from 'lucide-react'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useLocation } from "react-router-dom"
 
 const HoroscopeDashboard = () => {
@@ -43,11 +43,11 @@ const HoroscopeDashboard = () => {
         }
     })
 
-    React.useEffect(() => {
+    const location = useLocation();
+    useEffect(() => {
         const fetchHoroscope = async () => {
             try {
                 setIsLoading(true)
-                const location = useLocation();
                 const { birthDate, city, state } = location.state;
 
 

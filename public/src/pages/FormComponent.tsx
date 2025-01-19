@@ -1,8 +1,4 @@
-import React, { useState } from "react";
-import { Loader2, Stars } from "lucide-react";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -10,11 +6,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Vortex } from "@/components/ui/vortex";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2, Stars } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
+import * as z from "zod";
 
 const formSchema = z.object({
   name: z
@@ -133,17 +133,25 @@ const FormComponent = () => {
                       </FormItem>
                     )}
                   />
+                  <Link
+                    to="/chat"
+                    className="inline-flex items-center px-4 py-2 bg-purple-900/50 border border-purple-500/50 text-purple-100 hover:bg-purple-800/50 rounded-md"
+                  >
+                    <Stars className="w-4 h-4 mr-2" />
+                    Consult the Oracle
+                  </Link>
 
                   <FormField
                     control={form.control}
                     name="dob"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-purple-200">Date of Birth</FormLabel>
+                        <FormLabel className="text-purple-200">Date and Time of Birth</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
-                            type="date"
+                            type="string"
+                            placeholder="Enter your date and time of birth"
                             className="bg-white/10 border-purple-500/30 text-purple-100"
                             disabled={isLoading}
                           />
@@ -219,14 +227,6 @@ const FormComponent = () => {
                       )}
                     />
                   </div>
-
-                  <Link
-                    to="/chat"
-                    className="inline-flex items-center px-4 py-2 bg-purple-900/50 border border-purple-500/50 text-purple-100 hover:bg-purple-800/50 rounded-md"
-                  >
-                    <Stars className="w-4 h-4 mr-2" />
-                    Consult the Oracle
-                  </Link>
 
                   <Button
                     type="submit"

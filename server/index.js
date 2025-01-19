@@ -144,7 +144,7 @@ app.post("/chat", async (req, res) => {
       console.error("Error fetching coordinates:", error);
     }
 
-    const aiPrompt = `Always generate horoscopic response based on this birth data: date ${date}, location ${city}, ${state} (${lat}, ${lng}), answer the following question in a brief, conversational way: ${prompt}`;
+    const aiPrompt = `You are an Expert Astrologer! Always generate horoscopic response based on this birth data: date ${date}, location ${city}, ${state} (${lat}, ${lng}), answer the following question in a brief, conversational way: ${prompt}`;
 
     const result = await model.generateContent(aiPrompt);
     const chatResponse = result.response.text();
