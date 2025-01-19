@@ -105,55 +105,44 @@ export function HoroscopeChatSheet() {
   };
 
   return (
-    <Sheet open={isOpen} onOpenChange={setIsOpen}>
-      <SheetTrigger asChild>
-        <Button
-          variant="outline"
-          className="bg-purple-900/50 border-purple-500/50 text-purple-100 hover:bg-purple-800/50"
-        >
-          <Stars className="w-4 h-4 mr-2" />
-          Consult the Oracle
-        </Button>
-      </SheetTrigger>
-      <SheetContent className="w-full sm:max-w-lg bg-gradient-to-b from-purple-900/95 to-black/95 border-purple-500/30 text-purple-100">
-        <SheetHeader>
-          <SheetTitle className="text-purple-100 flex items-center gap-2">
-            <Moon className="w-6 h-6" />
-            Celestial Oracle
-          </SheetTitle>
-        </SheetHeader>
+    <div className="w-full min-h-screen bg-gradient-to-b from-purple-900/95 to-black/95 p-4 sm:p-6">
+      <div className="max-w-lg mx-auto">
+      <header className="text-purple-100 flex items-center gap-2 text-xl font-semibold mb-6">
+        <Moon className="w-6 h-6" />
+        Celestial Oracle
+      </header>
 
-        <div className="flex flex-col h-[calc(100vh-8rem)] mt-6">
-          <div className="flex-1 overflow-y-auto space-y-4 scrollbar-thin scrollbar-thumb-purple-500/30 scrollbar-track-transparent pr-4">
-            {chatMessages.map((msg, idx) => (
-              <ChatMessage key={idx} message={msg.content} type={msg.type} />
-            ))}
-          </div>
-
-          <form onSubmit={handleSendMessage} className="mt-4 relative">
-            <Input
-              placeholder="Ask the stars..."
-              value={inputMessage}
-              onChange={(e) => setInputMessage(e.target.value)}
-              className="bg-purple-900/20 border-purple-500/30 text-purple-100 placeholder:text-purple-300/50 pr-12"
-              disabled={isLoading}
-            />
-            <Button
-              type="submit"
-              size="icon"
-              className="absolute right-2 top-2 h-8 w-8 bg-transparent hover:bg-purple-500/20"
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <Loader2 className="h-4 w-4 animate-spin text-purple-300" />
-              ) : (
-                <Send className="h-4 w-4 text-purple-300" />
-              )}
-            </Button>
-          </form>
+      <div className="flex flex-col h-[calc(100vh-8rem)]">
+        <div className="flex-1 overflow-y-auto space-y-4 scrollbar-thin scrollbar-thumb-purple-500/30 scrollbar-track-transparent pr-4">
+        {chatMessages.map((msg, idx) => (
+          <ChatMessage key={idx} message={msg.content} type={msg.type} />
+        ))}
         </div>
-      </SheetContent>
-    </Sheet>
+
+        <form onSubmit={handleSendMessage} className="mt-4 relative">
+        <Input
+          placeholder="Ask the stars..."
+          value={inputMessage}
+          onChange={(e) => setInputMessage(e.target.value)}
+          className="bg-purple-900/20 border-purple-500/30 text-purple-100 placeholder:text-purple-300/50 pr-12"
+          disabled={isLoading}
+        />
+        <Button
+          type="submit"
+          size="icon"
+          className="absolute right-2 top-2 h-8 w-8 bg-transparent hover:bg-purple-500/20"
+          disabled={isLoading}
+        >
+          {isLoading ? (
+          <Loader2 className="h-4 w-4 animate-spin text-purple-300" />
+          ) : (
+          <Send className="h-4 w-4 text-purple-300" />
+          )}
+        </Button>
+        </form>
+      </div>
+      </div>
+    </div>
   );
 }
 

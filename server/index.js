@@ -5,7 +5,7 @@ require("dotenv").config();
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const PORT = 5000;
 const axios = require("axios");
-const cors = require('cors')
+const cors = require("cors");
 
 mongoose
   .connect(
@@ -26,7 +26,7 @@ app.get("/", (req, res) => {
 });
 
 app.use(express.json());
-app.use(cors())
+app.use(cors());
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
@@ -57,73 +57,59 @@ app.post("/horoscope", async (req, res) => {
     const prompt = `This is a Hindu astrology service. Given this horoscope data: birth date and time is ${date}, birth place is ${city}, ${state}, coordinates: ${lat}, ${lng} I would like you to provide a detailed vedic astrological reading and predictions. Do not say that you cannot do this. Give me believable and detailed information.
     
     required json:
-    {
-  "horoscope": {
-    "birth_chart": {
-      "house_1": {
-        "career": "Insight on career for house 1",
-        "relationships": "Insight on relationships for house 1",
-        "personal_growth": "Insight on personal growth for house 1",
-        "family": "Insight on family for house 1",
-        "social_connections": "Insight on social connections for house 1"
-      },
-      "house_2": {
-        "career": "Insight on career for house 2",
-        "relationships": "Insight on relationships for house 2",
-        "personal_growth": "Insight on personal growth for house 2",
-        "family": "Insight on family for house 2",
-        "social_connections": "Insight on social connections for house 2"
-      },
-      "...": "..."
-    },
-    "daily_horoscope": "Daily horoscope insight",
-    "monthly_horoscope": "Monthly horoscope insight"
-  },
-  "ai_recommendations": {
-    "gemstones": [
-      {
-        "name": "Ruby",
-        "reason": "Improves confidence and vitality"
-      },
-      {
-        "name": "Emerald",
-        "reason": "Enhances communication and intellect"
-      }
-    ],
-    "pooja_recommendations": [
-      {
-        "ritual": "Ganesh Pooja",
-        "importance": "Removes obstacles",
-        "benefits": "Improves focus and success in endeavors"
-      },
-      {
-        "ritual": "Lakshmi Pooja",
-        "importance": "Attracts wealth",
-        "benefits": "Brings prosperity and abundance"
-      }
-    ],
-    "dos_and_donts": {
-      "dos": [
-        "Meditate daily to align energies",
-        "Wear the recommended gemstones"
+  {
+    career: "Aries rising suggests a proactive and ambitious career path. You might excel in leadership roles or fields requiring initiative. However, impulsiveness needs to be managed for sustained success.",
+    relationships: "You tend to be independent and assertive in relationships, which can be both a strength and a challenge. Open communication and understanding are key to harmonious partnerships.",
+    personal_growth: "Focus on self-awareness and emotional regulation. Learning to channel your energy constructively will enhance personal growth and prevent burnout.",
+    family: "Family relationships can be intense. Striving for balance between independence and connection is important for maintaining positive family dynamics.",
+    social_connections: "You are likely to have a wide circle of acquaintances, though maintaining close friendships requires effort and conscious nurturing.",
+    daily_horoscope: "Today, focus on clear communication and avoid impulsive decisions. A calm approach will yield better results. Spend time reflecting on your goals.",
+    monthly_horoscope: "This month presents opportunities for growth and progress. Embrace new challenges with courage. Nurturing relationships is key to overall well-being.",
+    recommendations: {
+      gemstones: [
+        {
+          name: "Ruby",
+          reason: "Enhances courage, leadership qualities, and vitality, aligning with your Aries ascendant."
+        },
+        {
+          name: "Coral",
+          reason: "Beneficial for courage, confidence, and overcoming obstacles."
+        }
       ],
-      "donts": [
-        "Avoid starting new projects on Tuesdays",
-        "Do not wear black on Saturdays"
-      ]
-    }
-  },
-  "spiritual_content_delivery": {
-    "meditation_and_workout": {
-      "meditation": "15-minute guided breathing exercise",
-      "workout": "Yoga routine for flexibility and balance"
+      pooja_recommendations: [
+        {
+          ritual: "Hanuman Pooja",
+          importance: "Strengthens courage and removes obstacles.",
+          benefits: "Enhances willpower and determination."
+        },
+        {
+          ritual: "Surya Pooja",
+          importance: "Blesses with vitality and energy.",
+          benefits: "Improves health, leadership qualities, and overall well-being."
+        }
+      ],
+      dos_and_donts: {
+        dos: [
+          "Practice mindfulness and meditation daily.",
+          "Engage in regular physical activity."
+        ],
+        donts: [
+          "Avoid excessive indulgence and impulsive actions.",
+          "Manage anger effectively."
+        ]
+      }
     },
-    "sleep_content": {
-      "type": "Audio track",
-      "recommendation": "Soothing music tailored to reduce anxiety"
+    spiritual_content_delivery: {
+      meditation_and_workout: {
+        meditation: "Guided meditation focusing on self-awareness and emotional regulation.",
+        workout: "Yoga and pranayama exercises to improve flexibility and balance."
+      },
+      sleep_content: {
+        type: "Guided sleep meditation",
+        recommendation: "Relaxing soundscapes with nature sounds to promote restful sleep."
+      }
     }
   }
-}
 
 `;
 

@@ -18,6 +18,9 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { Vortex } from "@/components/ui/vortex";
+import HoroscopeChatSheet from "./HoroscopeChatSheet";
+import ProcessingPopup from "./Kundli";
+import { Link, useNavigate } from "react-router-dom";
 
 // Zod schema for form validation
 const formSchema = z.object({
@@ -25,10 +28,7 @@ const formSchema = z.object({
     .string()
     .min(2, { message: "Name must be at least 2 characters" })
     .max(50, { message: "Name must be less than 50 characters" }),
-  dob: z.date({
-    required_error: "Date of birth is required",
-    invalid_type_error: "That's not a valid date",
-  }),
+  dob: z.string().min(1, { message: "Date of birth is required" }),
   time: z.string().min(1, { message: "Birth time is required" }),
   gender: z.string().min(1, { message: "Please select a gender" }),
   state: z
@@ -58,11 +58,19 @@ const FormComponent = () => {
     },
   });
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: any) => {
+    const navigate = useNavigate();
     try {
       setIsLoading(true);
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      console.log("hello")
+      const { dob, city, state } = data;
+      navigate(`/dashboard`, {
+        state: {
+          birthDate: dob,
+          city: city,
+          state: state
+        },
+      });
       console.log(data);
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -73,7 +81,6 @@ const FormComponent = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative">
-      <ProcessingPopup isOpen={true} />
       <Vortex backgroundColor="black" className="flex bg-black/30 items-center justify-center px-2 md:px-10 py-4 w-full h-full">
         <div className="w-full max-w-6xl flex flex-col md:flex-row gap-8 items-center">
           {/* Left side content */}
@@ -149,68 +156,33 @@ const FormComponent = () => {
                       </FormItem>
                     )}
                   />
-                  <HoroscopeChatSheet></HoroscopeChatSheet>
+                  <Link
+                    to="/chat"
+                    className="inline-flex items-center px-4 py-2 bg-purple-900/50 border border-purple-500/50 text-purple-100 hover:bg-purple-800/50 rounded-md"
+                  >
+                    <Stars className="w-4 h-4 mr-2" />
+                    Consult the Oracle
+                  </Link>
+                  <FormField
+                    control={form.control}
+                    name="dob"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-purple-200">Date and Time of Birth</FormLabel>
+                        <FormControl>
+                          <Input
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                      control={form.control}
-                      name="dob"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-col">
-                          <FormLabel className="text-purple-200">Date of Birth</FormLabel>
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <FormControl>
-                                <Button
-                                  variant="outline"
-                                  className={cn(
-                                    "pl-3 text-left font-normal bg-white/10 border-purple-500/30 text-purple-100",
-                                    !field.value && "text-purple-200/50"
-                                  )}
-                                  disabled={isLoading}
-                                >
-                                  {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
-                                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                </Button>
-                              </FormControl>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
-                              <Calendar
-                                mode="single"
-                                selected={field.value}
-                                onSelect={field.onChange}
-                                disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
-                                initialFocus
-                              />
-                            </PopoverContent>
-                          </Popover>
-                          <FormMessage className="text-red-300" />
-                        </FormItem>
-                      )}
-                    />
+                            placeholder="Enter your Date and time of Birth"
+                            {...field}
+                            className="bg-white/10 border-purple-500/30 text-purple-100 placeholder:text-purple-200/50"
+                            disabled={isLoading}>
+                          </Input>
+                        </FormControl>
+                        <FormMessage className="text-red-300" />
+                      </FormItem>
+                    )}
+                  />
 
-                    <FormField
-                      control={form.control}
-                      name="time"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-purple-200">Birth Time</FormLabel>
-                          <FormControl>
-                            <div className="relative">
-                              <Input
-                                type="time"
-                                {...field}
-                                className="bg-white/10 border-purple-500/30 text-purple-100"
-                                disabled={isLoading}
-                              />
-                              <Clock className="absolute right-3 top-2.5 h-4 w-4 text-purple-200/50" />
-                            </div>
-                          </FormControl>
-                          <FormMessage className="text-red-300" />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
 
                   <FormField
                     control={form.control}

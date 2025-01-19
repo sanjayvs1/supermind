@@ -1,8 +1,7 @@
-import { Canvas, useLoader, useThree } from "@react-three/fiber";
-import { Environment, OrbitControls } from "@react-three/drei";
-import { Suspense, useEffect, useMemo, useRef, useState } from "react";
-import { GLTFLoader } from "three-stdlib";
+import { useLoader, useThree } from "@react-three/fiber";
 import { gsap } from "gsap";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { GLTFLoader } from "three-stdlib";
 import FormComponent from "./FormComponent";
 
 function StarField() {
@@ -63,7 +62,7 @@ function Model() {
 }
 
 function Horoscope() {
-  const [showForm, setShowForm] = useState(false);
+  const [showForm, setShowForm] = useState(true);
 
   function CameraAnimation() {
     const { camera, scene } = useThree();
@@ -107,7 +106,7 @@ function Horoscope() {
 
   return (
     <div className="relative w-screen h-screen">
-      <Canvas
+      {/* <Canvas
         shadows
         style={{ backgroundColor: "#000000" }}
         camera={{ fov: 45 }}
@@ -132,13 +131,12 @@ function Horoscope() {
         </Suspense>
 
         <OrbitControls enableDamping dampingFactor={0.05} rotateSpeed={0.5} />
-      </Canvas>
+      </Canvas> */}
 
       {/* Form overlay with fade-in animation */}
       <div
-        className={`absolute inset-0 flex items-center justify-center transition-opacity duration-1000 ${
-          showForm ? "opacity-100" : "opacity-0 pointer-events-none"
-        }`}
+        className={`absolute inset-0 flex items-center justify-center transition-opacity duration-1000 ${showForm ? "opacity-100" : "opacity-0 pointer-events-none"
+          }`}
       >
         <div className="w-full h-full flex items-center justify-center">
           <FormComponent />

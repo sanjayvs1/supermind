@@ -1,94 +1,358 @@
-import React from 'react';
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Loader2, Stars, Sparkles, Bot, Gem } from "lucide-react";
+"use client"
 
-const ProcessingPopup = ({ isOpen }: { isOpen: boolean }) => {
-    const [currentStep, setCurrentStep] = React.useState(0);
-    const [completedSteps, setCompletedSteps] = React.useState([]);
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@/components/ui/accordion"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { apiUrl } from '@/utils'
+import { Brain, Building2, Check, Dumbbell, Gem, Heart, Home, NotebookIcon as Lotus, Moon, Music, Scroll, Sparkles, Stars, Sun, Users, X } from 'lucide-react'
+import React from 'react'
+import { useLocation } from "react-router-dom"
 
-    const steps = [
-        {
-            title: "Generating Kundali",
-            description: "Calculating planetary positions using Swiss Ephemeris",
-            icon: Stars,
+const HoroscopeDashboard = () => {
+    const [isLoading, setIsLoading] = React.useState(true)
+    const [horoscope, setHoroscope] = React.useState({
+        career: "",
+        relationships: "",
+        personal_growth: "",
+        family: "",
+        social_connections: "",
+        daily_horoscope: "",
+        monthly_horoscope: "",
+        recommendations: {
+            gemstones: [],
+            pooja_recommendations: [],
+            dos_and_donts: {
+                dos: [],
+                donts: []
+            }
         },
-        {
-            title: "Analyzing Cosmic Patterns",
-            description: "Synthesizing celestial influences and alignments",
-            icon: Sparkles,
-        },
-        {
-            title: "Personalizing Recommendations",
-            description: "Determining optimal gemstones and rituals",
-            icon: Gem,
-        },
-        {
-            title: "Preparing Spiritual Guidance",
-            description: "Configuring AI for personalized spiritual advice",
-            icon: Bot,
+        spiritual_content_delivery: {
+            meditation_and_workout: {
+                meditation: "",
+                workout: ""
+            },
+            sleep_content: {
+                type: "",
+                recommendation: ""
+            }
         }
-    ];
+    })
 
     React.useEffect(() => {
-        if (isOpen) {
-            const timer = setInterval(() => {
-                setCurrentStep((prev) => {
-                    if (prev < steps.length - 1) {
-                        setCompletedSteps((completed) => [...completed, prev]);
-                        return prev + 1;
-                    }
-                    clearInterval(timer);
-                    return prev;
-                });
-            }, 2000);
+        const fetchHoroscope = async () => {
+            try {
+                setIsLoading(true)
+                const location = useLocation();
+                const { birthDate, city, state } = location.state;
 
-            return () => clearInterval(timer);
+
+                const response = await fetch(`${apiUrl}/horoscope`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        birthDate,
+                        city,
+                        state
+                    })
+                })
+                const data = await response.json()
+                setHoroscope(data)
+                setIsLoading(false)
+            } catch (error) {
+                console.error('Error fetching horoscope:', error)
+            }
         }
-    }, [isOpen]);
+
+        fetchHoroscope()
+    }, [])
 
     return (
-        <Dialog open={isOpen}>
-            <DialogContent className="bg-black/95 border-purple-500/30 text-purple-200 max-w-md">
-                <div className="space-y-6 p-2">
-                    <h2 className="text-2xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-purple-200">
-                        Revealing Your Cosmic Blueprint
-                    </h2>
-
-                    <div className="space-y-4">
-                        {steps.map((step, index) => {
-                            const isActive = currentStep === index;
-                            const isCompleted = completedSteps.includes(index);
-                            const Icon = step.icon;
-
-                            return (
-                                <div
-                                    key={index}
-                                    className={`flex items-start space-x-4 p-4 rounded-lg transition-all duration-200 ${isActive ? 'bg-purple-500/10 scale-105' : ''
-                                        } ${isCompleted ? 'opacity-60' : 'opacity-100'}`}
-                                >
-                                    <div className="flex-shrink-0">
-                                        {isActive ? (
-                                            <Loader2 className="w-6 h-6 text-purple-400 animate-spin" />
-                                        ) : (
-                                            <Icon className="w-6 h-6 text-purple-400" />
-                                        )}
-                                    </div>
-                                    <div className="flex-1">
-                                        <h3 className="font-semibold">{step.title}</h3>
-                                        <p className="text-sm text-purple-300/80">{step.description}</p>
-                                    </div>
-                                </div>
-                            );
-                        })}
-                    </div>
-
-                    <p className="text-center text-sm text-purple-300/60 animate-pulse">
-                        {currentStep < steps.length - 1 ? "Please wait while we process your details..." : "Almost ready..."}
-                    </p>
+        <div className="min-h-screen bg-gradient-to-b from-black to-purple-900 text-white relative overflow-hidden">
+            {/* Constellation background */}
+            <div className="absolute inset-0">
+                {[...Array(100)].map((_, i) => (
+                    <div
+                        key={i}
+                        className="absolute rounded-full bg-white"
+                        style={{
+                            top: `${Math.random() * 100}%`,
+                            left: `${Math.random() * 100}%`,
+                            width: `${Math.random() * 2 + 1}px`,
+                            height: `${Math.random() * 2 + 1}px`,
+                            opacity: Math.random(),
+                            animation: `twinkle ${Math.random() * 5 + 5}s linear infinite`,
+                        }}
+                    />
+                ))}
+            </div>
+            <div className="relative z-10 max-w-6xl mx-auto p-6 space-y-6">
+                <div className="flex items-center gap-2 mb-8">
+                    <Stars className="w-8 h-8 text-purple-300" />
+                    <h1 className="text-3xl font-bold text-purple-100">Cosmic Insights
+                        {isLoading && <span className="animate-pulse text-purple-300 ml-2">Loading...</span>}
+                    </h1>
                 </div>
-            </DialogContent>
-        </Dialog>
-    );
-};
 
-export default ProcessingPopup;
+                <Tabs defaultValue="daily" className="space-y-6">
+                    <TabsList className="bg-black/50 border border-purple-500/30">
+                        <TabsTrigger value="daily" className="data-[state=active]:bg-purple-700 text-white">
+                            <Sun className="w-4 h-4 mr-2" />
+                            Daily
+                        </TabsTrigger>
+                        <TabsTrigger value="monthly" className="data-[state=active]:bg-purple-700 text-white">
+                            <Moon className="w-4 h-4 mr-2" />
+                            Monthly
+                        </TabsTrigger>
+                        <TabsTrigger value="birth-chart" className="data-[state=active]:bg-purple-700 text-white">
+                            <Stars className="w-4 h-4 mr-2" />
+                            Birth Chart
+                        </TabsTrigger>
+                        <TabsTrigger value="recommendations" className="data-[state=active]:bg-purple-700 text-white">
+                            <Sparkles className="w-4 h-4 mr-2" />
+                            Recommendations
+                        </TabsTrigger>
+                        <TabsTrigger value="spiritual" className="data-[state=active]:bg-purple-700 text-white">
+                            <Lotus className="w-4 h-4 mr-2" />
+                            Spiritual
+                        </TabsTrigger>
+                    </TabsList>
+
+                    <TabsContent value="daily" className="mt-6">
+                        <Card className="bg-black/20 border-purple-500/30">
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2 text-purple-300">
+                                    <Sun className="text-yellow-500" />
+                                    Daily Horoscope
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <p className="text-purple-100">{horoscope.daily_horoscope}</p>
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
+
+                    <TabsContent value="monthly">
+                        <Card className="bg-black/20 border-purple-500/30">
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2 text-purple-300">
+                                    <Moon className="text-blue-300" />
+                                    Monthly Horoscope
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <p className="text-purple-100">{horoscope.monthly_horoscope}</p>
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
+
+                    <TabsContent value="birth-chart">
+                        <Card className="bg-black/20 border-purple-500/30">
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2 text-purple-300">
+                                    <Stars className="text-purple-300" />
+                                    Birth Chart Analysis
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <Accordion type="single" collapsible className="space-y-2">
+                                    <AccordionItem value="career" className="border-purple-500/30">
+                                        <AccordionTrigger className="hover:bg-purple-900/20">
+                                            <div className="flex items-center gap-2 text-purple-300">
+                                                <Building2 className="text-purple-300" />
+                                                Career Path
+                                            </div>
+                                        </AccordionTrigger>
+                                        <AccordionContent className="text-purple-100">
+                                            {horoscope.career}
+                                        </AccordionContent>
+                                    </AccordionItem>
+
+                                    <AccordionItem value="relationships" className="border-purple-500/30">
+                                        <AccordionTrigger className="hover:bg-purple-900/20">
+                                            <div className="flex items-center gap-2 text-purple-300">
+                                                <Heart className="text-pink-400" />
+                                                Relationships
+                                            </div>
+                                        </AccordionTrigger>
+                                        <AccordionContent className="text-purple-100">
+                                            {horoscope.relationships}
+                                        </AccordionContent>
+                                    </AccordionItem>
+
+                                    <AccordionItem value="growth" className="border-purple-500/30">
+                                        <AccordionTrigger className="hover:bg-purple-900/20">
+                                            <div className="flex items-center gap-2 text-purple-300">
+                                                <Brain className="text-blue-300" />
+                                                Personal Growth
+                                            </div>
+                                        </AccordionTrigger>
+                                        <AccordionContent className="text-purple-100">
+                                            {horoscope.personal_growth}
+                                        </AccordionContent>
+                                    </AccordionItem>
+
+                                    <AccordionItem value="family" className="border-purple-500/30">
+                                        <AccordionTrigger className="hover:bg-purple-900/20">
+                                            <div className="flex items-center gap-2 text-purple-300">
+                                                <Home className="text-green-300" />
+                                                Family
+                                            </div>
+                                        </AccordionTrigger>
+                                        <AccordionContent className="text-purple-100">
+                                            {horoscope.family}
+                                        </AccordionContent>
+                                    </AccordionItem>
+
+                                    <AccordionItem value="social" className="border-purple-500/30">
+                                        <AccordionTrigger className="hover:bg-purple-900/20">
+                                            <div className="flex items-center gap-2 text-purple-300">
+                                                <Users className="text-yellow-300" />
+                                                Social Connections
+                                            </div>
+                                        </AccordionTrigger>
+                                        <AccordionContent className="text-purple-100">
+                                            {horoscope.social_connections}
+                                        </AccordionContent>
+                                    </AccordionItem>
+                                </Accordion>
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
+
+                    <TabsContent value="recommendations">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <Card className="bg-black/20 border-purple-500/30">
+                                <CardHeader>
+                                    <CardTitle className="flex items-center gap-2 text-purple-300">
+                                        <Gem className="text-pink-400" />
+                                        Recommended Gemstones
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="space-y-4">
+                                        {horoscope.recommendations.gemstones.map((gem, index) => (
+                                            <div key={index} className="p-4 rounded-lg bg-purple-900/20 border border-purple-500/30">
+                                                <h4 className="font-semibold text-purple-200">{gem.name}</h4>
+                                                <p className="text-sm text-purple-300 mt-2">{gem.reason}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </CardContent>
+                            </Card>
+
+                            <Card className="bg-black/20 border-purple-500/30">
+                                <CardHeader>
+                                    <CardTitle className="flex items-center gap-2 text-purple-300">
+                                        <Lotus className="text-yellow-400" />
+                                        Recommended Poojas
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="space-y-4">
+                                        {horoscope.recommendations.pooja_recommendations.map((pooja, index) => (
+                                            <div key={index} className="p-4 rounded-lg bg-purple-900/20 border border-purple-500/30">
+                                                <h4 className="font-semibold text-purple-200">{pooja.ritual}</h4>
+                                                <p className="text-sm text-purple-300 mt-2">{pooja.importance}</p>
+                                                <p className="text-sm text-purple-300 mt-1">{pooja.benefits}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </CardContent>
+                            </Card>
+
+                            <Card className="bg-black/20 border-purple-500/30 md:col-span-2">
+                                <CardHeader>
+                                    <CardTitle className="flex items-center gap-2 text-purple-300">
+                                        <Scroll className="text-yellow-400" />
+                                        Dos & Don'ts
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="space-y-2">
+                                            <h4 className="font-semibold text-green-300 flex items-center gap-2">
+                                                <Check className="w-4 h-4" /> Dos
+                                            </h4>
+                                            <ul className="space-y-2">
+                                                {horoscope.recommendations.dos_and_donts.dos.map((item, index) => (
+                                                    <li key={index} className="text-green-100 text-sm flex items-start gap-2">
+                                                        <Check className="w-4 h-4 mt-1 flex-shrink-0" />
+                                                        {item}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <h4 className="font-semibold text-red-300 flex items-center gap-2">
+                                                <X className="w-4 h-4" /> Don'ts
+                                            </h4>
+                                            <ul className="space-y-2">
+                                                {horoscope.recommendations.dos_and_donts.donts.map((item, index) => (
+                                                    <li key={index} className="text-red-100 text-sm flex items-start gap-2">
+                                                        <X className="w-4 h-4 mt-1 flex-shrink-0" />
+                                                        {item}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </div>
+                    </TabsContent>
+
+                    <TabsContent value="spiritual">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <Card className="bg-black/20 border-purple-500/30">
+                                <CardHeader>
+                                    <CardTitle className="flex items-center gap-2 text-purple-300">
+                                        <Lotus className="text-pink-400" />
+                                        Meditation
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <p className="text-purple-100">{horoscope.spiritual_content_delivery.meditation_and_workout.meditation}</p>
+                                </CardContent>
+                            </Card>
+
+                            <Card className="bg-black/20 border-purple-500/30">
+                                <CardHeader>
+                                    <CardTitle className="flex items-center gap-2 text-purple-300">
+                                        <Dumbbell className="text-green-400" />
+                                        Workout
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <p className="text-purple-100">{horoscope.spiritual_content_delivery.meditation_and_workout.workout}</p>
+                                </CardContent>
+                            </Card>
+
+                            <Card className="bg-black/20 border-purple-500/30 md:col-span-2">
+                                <CardHeader>
+                                    <CardTitle className="flex items-center gap-2 text-purple-300">
+                                        <Music className="text-blue-400" />
+                                        Sleep Content
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <p className="text-purple-100"><span className="font-semibold">Type:</span> {horoscope.spiritual_content_delivery.sleep_content.type}</p>
+                                    <p className="text-purple-100 mt-2"><span className="font-semibold">Recommendation:</span> {horoscope.spiritual_content_delivery.sleep_content.recommendation}</p>
+                                </CardContent>
+                            </Card>
+                        </div>
+                    </TabsContent>
+                </Tabs>
+            </div>
+        </div>
+    )
+}
+
+export default HoroscopeDashboard
+
